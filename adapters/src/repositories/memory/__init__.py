@@ -1,0 +1,1 @@
+from .memory_joke_repository import MemoryJokeRepository
