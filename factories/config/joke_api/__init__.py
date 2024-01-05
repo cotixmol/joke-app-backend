@@ -1,0 +1,1 @@
+from .joke_api_config import JokeAPIConfig
