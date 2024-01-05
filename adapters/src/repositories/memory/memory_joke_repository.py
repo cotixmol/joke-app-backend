@@ -16,11 +16,11 @@ class MemoryJokeRepository(JokeRepository):
             else:
                 return None
         except Exception:
-            return JokeRepositoryException(method="get_joke")
+            raise JokeRepositoryException(method="get_joke")
 
     def add_joke(self, joke: Joke):
-        try:
-            self.jokes.append(joke)
-        except Exception:
-            return JokeRepositoryException(method="add_joke")
+        if not isinstance(joke.joke_value, str):
+            raise JokeRepositoryException(method="add_joke")
+        self.jokes.append(joke)
+
 

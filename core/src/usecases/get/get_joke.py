@@ -1,5 +1,6 @@
 from core.src.repository import JokeRepository
 from core.src.models import Joke
+from core.src.exceptions import JokeBusinessException
 
 
 class GetJoke:
@@ -10,5 +11,5 @@ class GetJoke:
         try:
             joke = self.joke_repository.get_joke()
             return joke
-        except Exception as e:
-            raise Exception(str(e))
+        except Exception:
+            raise JokeBusinessException()
