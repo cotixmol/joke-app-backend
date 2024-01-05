@@ -1,7 +1,9 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 from fastapi import FastAPI
+from api.routers import joke
 
 app = FastAPI()
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+app.include_router(joke, prefix="/jokes")
