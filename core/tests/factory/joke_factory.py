@@ -5,9 +5,9 @@ from core.src.models import Joke
 
 
 @fixture
-def joke_factory(
-    faker: Faker,
-) -> Callable:
+def joke_factory() -> Callable:
+    faker = Faker()
+
     def _factory(**kwargs: Any) -> Joke:
         return Joke(
             **{
