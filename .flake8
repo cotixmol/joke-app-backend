@@ -1,0 +1,4 @@
+[flake8]
+max-line-length = 120
+exclude = .github,.venv,__pycache__,__init__.py,.mypy_cache,.pytest_cache
+show-source = True
