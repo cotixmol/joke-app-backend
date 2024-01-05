@@ -2,4 +2,4 @@ from typing import NamedTuple
 
 
 class Joke(NamedTuple):
-    joke_value: str
+    joke_value: object
