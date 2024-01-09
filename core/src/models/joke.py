@@ -1,5 +1,4 @@
-from typing import NamedTuple
+from pydantic import BaseModel
 
-
-class Joke(NamedTuple):
-    joke_value: object
+class Joke(BaseModel):
+    joke_value: str
