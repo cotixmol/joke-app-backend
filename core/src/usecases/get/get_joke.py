@@ -7,7 +7,7 @@ class GetJoke:
     def __init__(self, joke_repository: JokeRepository):
         self.joke_repository = joke_repository
 
-    def execute(self) -> Joke:
+    def __call__(self) -> Joke:
         try:
             joke = self.joke_repository.get_joke()
             return joke

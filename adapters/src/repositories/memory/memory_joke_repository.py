@@ -4,7 +4,6 @@ from core.src.exceptions import JokeRepositoryException
 
 FIRST_ITEM = 0
 
-
 class MemoryJokeRepository(JokeRepository):
     def __init__(self):
         self.jokes = []
