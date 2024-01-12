@@ -9,9 +9,6 @@ class MockJokeAPIRepository(JokeRepository):
         try:  
             api_url = MockJokeAPIConfig.MOCK_JOKE_API_URL
             response = requests.get(api_url)
-            if response.status_code == requests.codes.ok:
-               return Joke(joke_value=json.loads(response.text)[0].get("joke"))
-            else:
-                return ("Error:", response.status_code, response.text)
+            return Joke(joke_value=json.loads(response.text)[0].get("joke"))
         except Exception as e:
             raise JokeRepositoryException(method="get_joke")

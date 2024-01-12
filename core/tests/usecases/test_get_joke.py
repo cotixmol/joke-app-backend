@@ -104,7 +104,7 @@ class TestGetJokeMockAPIRepository():
         assert joke_response is not None
         assert isinstance(joke_response, Joke)
 
-    def test_retrieve_joke_api_error(self, mocker):
+    def test__get_joke__returns_joke_repository_exception__when_api_response_is_an_error(self, mocker):
         mocker.patch('requests.get', side_effect=HTTPError("API error"))
 
         joke_repository = MockJokeAPIRepository()
