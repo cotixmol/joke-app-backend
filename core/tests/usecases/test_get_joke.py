@@ -3,16 +3,15 @@ load_dotenv()
 from typing import Callable
 from pydantic import ValidationError
 import pytest
-import unittest
-from unittest.mock import MagicMock
+from requests.exceptions import HTTPError
 from core.src.repository import JokeRepository
 from adapters.src.repositories import MemoryJokeRepository
+from adapters.tests.repositories import MockJokeAPIRepository
 from core.src.exceptions import JokeRepositoryException, JokeBusinessException
 from core.src.usecases import GetJoke
 from core.src.models import Joke
 
-#Sociable Unit Testing
-class TestGetJoke():
+class TestGetJokeMemoryRepository():
     def test__get_joke__return_jokes__when_there_are_jokes_in_repository(self, joke_factory: Callable) -> None:
         joke_repository: JokeRepository = MemoryJokeRepository()
         joke = joke_factory()
@@ -67,7 +66,6 @@ class TestJokeTyping():
             joke_repository.add_joke(invalid_joke)
         assert "Something was wrong trying to add_joke the Joke" in str(e.value)
 
-#Solitary Unit Testing
 class TestGetJokeMethod():
     def test__returns_a_joke__when_api_is_available(self, mocker):
         joke_repository: JokeRepository = mocker.Mock(spec=JokeRepository)
@@ -96,5 +94,20 @@ class TestGetJokeMethod():
         with pytest.raises(JokeBusinessException):
             get_joke()
         
+class TestGetJokeMockAPIRepository():
+    def test__get_joke__return_a_valid_answer__when_we_call_api_repository(self):
+        joke_repository: JokeRepository = MockJokeAPIRepository()
 
+        get_joke = GetJoke(joke_repository)
+        joke_response = get_joke()
+
+        assert joke_response is not None
+        assert isinstance(joke_response, Joke)
+
+    def test_retrieve_joke_api_error(self, mocker):
+        mocker.patch('requests.get', side_effect=HTTPError("API error"))
+
+        joke_repository = MockJokeAPIRepository()
         
+        with pytest.raises(JokeRepositoryException):
+            joke_repository.get_joke()
