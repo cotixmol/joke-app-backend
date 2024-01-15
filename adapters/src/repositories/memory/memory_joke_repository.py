@@ -4,6 +4,7 @@ from core.src.exceptions import JokeRepositoryException
 
 FIRST_ITEM = 0
 
+
 class MemoryJokeRepository(JokeRepository):
     def __init__(self):
         self.jokes = []
@@ -21,5 +22,3 @@ class MemoryJokeRepository(JokeRepository):
         if not isinstance(joke.joke_value, str):
             raise JokeRepositoryException(method="add_joke")
         self.jokes.append(joke)
-
-

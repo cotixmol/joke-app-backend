@@ -1,5 +1,6 @@
 import os
 
+
 def parse_env_variable(env_variable: str) -> str:
     value = os.environ.get(env_variable)
     if value is not None:
