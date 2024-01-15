@@ -1,1 +1,0 @@
-from .joke import joke

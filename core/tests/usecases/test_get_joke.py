@@ -1,5 +1,3 @@
-from dotenv import load_dotenv
-load_dotenv()
 from typing import Callable
 from pydantic import ValidationError
 import pytest
@@ -10,6 +8,9 @@ from adapters.tests.repositories import MockJokeAPIRepository
 from core.src.exceptions import JokeRepositoryException, JokeBusinessException
 from core.src.usecases import GetJoke
 from core.src.models import Joke
+from dotenv import load_dotenv
+load_dotenv()
+
 
 class TestGetJokeMemoryRepository():
     def test__get_joke__return_jokes__when_there_are_jokes_in_repository(self, joke_factory: Callable) -> None:
@@ -22,15 +23,15 @@ class TestGetJokeMemoryRepository():
 
         expected_joke_response = joke
         assert joke_response == expected_joke_response
-    
+
     def test__get_joke__returns_none__when_there_are_no_jokes_in_repository(self) -> None:
         joke_repository: JokeRepository = MemoryJokeRepository()
 
         get_joke = GetJoke(joke_repository)
         joke_response = get_joke()
 
-        assert joke_response == None
-    
+        assert joke_response is None
+
     def test__get_joke__raises_business_exception__when_repository_is_incorrect(self) -> None:
         joke_repository: JokeRepository = None
 
@@ -38,7 +39,7 @@ class TestGetJokeMemoryRepository():
 
         with pytest.raises(JokeBusinessException):
             get_joke()
-        
+
     def test__add_joke__add_a_valid_joke_to_the_memory_instance__when_add_joke_method_is_used(self):
         joke_repository: JokeRepository = MemoryJokeRepository()
 
@@ -47,6 +48,7 @@ class TestGetJokeMemoryRepository():
 
         assert len(joke_repository.jokes) == 1
         assert joke_repository.jokes[0].joke_value == "This is a joke"
+
 
 class TestJokeTyping():
     def test__pydantic_joke_model__raises_validation_exception__when_the_joke_value_is_a_non_string_value(self):
@@ -66,12 +68,13 @@ class TestJokeTyping():
             joke_repository.add_joke(invalid_joke)
         assert "Something was wrong trying to add_joke the Joke" in str(e.value)
 
+
 class TestGetJokeMethod():
     def test__returns_a_joke__when_api_is_available(self, mocker):
         joke_repository: JokeRepository = mocker.Mock(spec=JokeRepository)
         joke_repository.get_joke = mocker.Mock(return_value="Some Joke")
 
-        get_joke = GetJoke(joke_repository) #Due to the __call__ it is a function
+        get_joke = GetJoke(joke_repository)  # Due to the __call__ it is a function
         joke = get_joke()
 
         assert joke == "Some Joke"
@@ -93,7 +96,8 @@ class TestGetJokeMethod():
 
         with pytest.raises(JokeBusinessException):
             get_joke()
-        
+
+
 class TestGetJokeMockAPIRepository():
     def test__get_joke__return_a_valid_answer__when_we_call_api_repository(self):
         joke_repository: JokeRepository = MockJokeAPIRepository()
@@ -105,9 +109,9 @@ class TestGetJokeMockAPIRepository():
         assert isinstance(joke_response, Joke)
 
     def test__get_joke__returns_joke_repository_exception__when_api_response_is_an_error(self, mocker):
+        joke_repository = MockJokeAPIRepository()
+
         mocker.patch('requests.get', side_effect=HTTPError("API error"))
 
-        joke_repository = MockJokeAPIRepository()
-        
         with pytest.raises(JokeRepositoryException):
             joke_repository.get_joke()
